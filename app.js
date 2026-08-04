@@ -243,12 +243,13 @@
     const topicos = data.topicos || {};
     const pcmDimensoesRaw = data.pcmDimensoes || data.cosmobIndicadores || {};
     const pcmDimensoes = {
-      durabilidade: numeroSeguro(pcmDimensoesRaw.durabilidade),
-      designReparavel: numeroSeguro(pcmDimensoesRaw.designReparavel),
-      designReaproveitamento: numeroSeguro(pcmDimensoesRaw.designReaproveitamento),
-      servicosCiclo: numeroSeguro(pcmDimensoesRaw.servicosCiclo),
-      rastreabilidade: numeroSeguro(pcmDimensoesRaw.rastreabilidade),
-      transparencia: numeroSeguro(pcmDimensoesRaw.transparencia)
+      entrada: numeroSeguro(pcmDimensoesRaw.entrada),
+      residuos: numeroSeguro(pcmDimensoesRaw.residuos),
+      desmonte: numeroSeguro(pcmDimensoesRaw.desmonte),
+      reciclabilidade: numeroSeguro(pcmDimensoesRaw.reciclabilidade),
+      aterro: numeroSeguro(pcmDimensoesRaw.aterro),
+      recuperacaoEnergia: numeroSeguro(pcmDimensoesRaw.recuperacaoEnergia),
+      reaproveitamento: numeroSeguro(pcmDimensoesRaw.reaproveitamento)
     };
 
     destroyChart('topicos');
@@ -308,22 +309,24 @@
       type: 'radar',
       data: {
         labels: [
-          'Matéria-prima virgem',
-          'Matéria-prima reciclada',
-          'Matéria-prima de reaproveitamento',
-          'Matéria-prima renovável',
+          'Entrada de matéria-prima',
+          'Gestão de resíduos',
           'Desmontagem no fim de vida',
-          'Circularidade no fim de vida do produto'
+          'Reciclabilidade',
+          'Destinação a aterro',
+          'Recuperação de energia',
+          'Reaproveitamento'
         ],
         datasets: [{
-          label: 'Dimensoes do PCM (%)',
+          label: 'Dimensões do PCM (%)',
           data: [
-            pcmDimensoes.durabilidade,
-            pcmDimensoes.designReparavel,
-            pcmDimensoes.designReaproveitamento,
-            pcmDimensoes.servicosCiclo,
-            pcmDimensoes.rastreabilidade,
-            pcmDimensoes.transparencia
+            pcmDimensoes.entrada,
+            pcmDimensoes.residuos,
+            pcmDimensoes.desmonte,
+            pcmDimensoes.reciclabilidade,
+            pcmDimensoes.aterro,
+            pcmDimensoes.recuperacaoEnergia,
+            pcmDimensoes.reaproveitamento
           ],
           backgroundColor: 'rgba(217, 119, 6, 0.22)',
           borderColor: '#10b981',
