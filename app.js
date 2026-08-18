@@ -36,6 +36,7 @@
     dataInicio: document.getElementById('filtroDataInicio'),
     dataFim: document.getElementById('filtroDataFim'),
     btnAtualizar: document.getElementById('btnAtualizar'),
+    btnTodasCidades: document.getElementById('btnTodasCidades'),
     autoRefresh: document.getElementById('autoRefresh'),
     adminToken: document.getElementById('adminToken'),
     kpiTotal: document.getElementById('kpiTotal'),
@@ -65,16 +66,25 @@
   function paramsToQuery(obj) {
     const p = new URLSearchParams();
     Object.entries(obj).forEach(([k, v]) => {
-      if (v != null && String(v).trim() !== '') p.set(k, String(v).trim());
+      if (Array.isArray(v)) {
+        v.filter((item) => String(item).trim() !== '')
+          .forEach((item) => p.append(k, String(item).trim()));
+      } else if (v != null && String(v).trim() !== '') {
+        p.set(k, String(v).trim());
+      }
     });
     return p.toString();
+  }
+
+  function cidadesSelecionadas() {
+    return Array.from(el.cidade.selectedOptions).map((option) => option.value);
   }
 
   function filtrosAtuais() {
     return {
       setor: el.setor.value,
       produto: el.produto.value,
-      cidade: el.cidade.value,
+      cidade: cidadesSelecionadas(),
       uf: el.uf.value,
       data_inicio: el.dataInicio.value,
       data_fim: el.dataFim.value
@@ -192,14 +202,33 @@
     select.value = valores.includes(atual) ? atual : '';
   }
 
+  function formatarCidade(valor) {
+    if (valor === 'SAO BENTO DO SUL') return 'São Bento do Sul';
+    return valor;
+  }
+
+  function preencherSelectMultiplo(select, valores) {
+    const selecionados = new Set(cidadesSelecionadas());
+    select.innerHTML = '';
+    valores.forEach((valor) => {
+      const option = document.createElement('option');
+      option.value = valor;
+      option.textContent = formatarCidade(valor);
+      option.selected = selecionados.has(valor);
+      select.appendChild(option);
+    });
+  }
+
   async function carregarFiltros() {
     const filtros = filtrosAtuais();
+    // A lista de cidades deve continuar completa para permitir novas combinações.
+    delete filtros.cidade;
     const result = await getJSON('/api/dashboard/filters', filtros);
     if (!result || !result.success) return;
     const data = result.data || {};
     preencherSelect(el.setor, data.setores || [], 'Todos');
     preencherSelect(el.produto, data.produtos || [], 'Todos');
-    preencherSelect(el.cidade, data.cidades || [], 'Todas');
+    preencherSelectMultiplo(el.cidade, data.cidades || []);
     preencherSelect(el.uf, data.ufs || [], data.hasUf ? 'Todas' : 'UF indisponivel');
     el.uf.disabled = !data.hasUf;
   }
@@ -502,9 +531,15 @@
   }
 
   function configurarEventos() {
-    el.btnAtualizar.addEventListener('click', async () => {
+  el.btnAtualizar.addEventListener('click', async () => {
       await atualizarTudo();
-    });
+  });
+
+  el.btnTodasCidades.addEventListener('click', async () => {
+    Array.from(el.cidade.options).forEach((option) => { option.selected = false; });
+    await atualizarDashboard();
+    await Promise.allSettled([carregarFiltros()]);
+  });
 
     [el.setor, el.produto, el.cidade, el.uf, el.dataInicio, el.dataFim].forEach((input) => {
       input.addEventListener('change', async () => {

@@ -121,6 +121,28 @@ input[type="password"] {
   outline: none;
 }
 
+select[multiple] {
+  min-height: 8.9rem;
+  padding: .35rem;
+}
+
+.filter-help {
+  color: var(--muted);
+  font-size: .75rem;
+  line-height: 1.35;
+}
+
+.secondary-button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.secondary-button:hover {
+  border-color: rgba(34, 197, 94, 0.75);
+  background: rgba(34, 197, 94, 0.08);
+}
+
 select:focus,
 input[type="date"]:focus,
 input[type="password"]:focus {

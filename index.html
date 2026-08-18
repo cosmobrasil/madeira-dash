@@ -30,7 +30,8 @@
           <select id="filtroProduto"><option value="">Todos</option></select>
         </label>
         <label>Cidade
-          <select id="filtroCidade"><option value="">Todas</option></select>
+          <select id="filtroCidade" multiple size="5" aria-describedby="ajudaFiltroCidade"></select>
+          <span id="ajudaFiltroCidade" class="filter-help">Nenhuma cidade selecionada inclui todas. Use Ctrl/Cmd para escolher mais de uma.</span>
         </label>
         <label>UF
           <select id="filtroUf"><option value="">Todas</option></select>
@@ -43,7 +44,10 @@
         </label>
       </div>
       <div class="actions-row">
-        <button id="btnAtualizar">Atualizar painel</button>
+        <div class="actions-group">
+          <button id="btnAtualizar">Atualizar painel</button>
+          <button id="btnTodasCidades" type="button" class="secondary-button">Todas as cidades</button>
+        </div>
         <label class="refresh-label"><input id="autoRefresh" type="checkbox" /> Atualização automática (60s)</label>
       </div>
     </section>
