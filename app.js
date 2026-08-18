@@ -202,15 +202,29 @@
     select.value = valores.includes(atual) ? atual : '';
   }
 
+  function normalizarChaveCidade(valor) {
+    const cidade = String(valor || '')
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase()
+      .replace(/\s+/g, ' ');
+    return /^SAO BENTO DO SUL(?:[\s/.-]+(?:SC|SANTA CATARINA))?$/.test(cidade)
+      ? 'SAO BENTO DO SUL'
+      : cidade;
+  }
+
   function formatarCidade(valor) {
-    if (valor === 'SAO BENTO DO SUL') return 'São Bento do Sul';
+    const cidade = normalizarChaveCidade(valor);
+    if (cidade === 'SAO BENTO DO SUL') return 'São Bento do Sul';
     return valor;
   }
 
   function preencherSelectMultiplo(select, valores) {
-    const selecionados = new Set(cidadesSelecionadas());
+    const selecionados = new Set(cidadesSelecionadas().map(normalizarChaveCidade));
+    const cidadesUnicas = [...new Set(valores.map(normalizarChaveCidade))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
     select.innerHTML = '';
-    valores.forEach((valor) => {
+    cidadesUnicas.forEach((valor) => {
       const option = document.createElement('option');
       option.value = valor;
       option.textContent = formatarCidade(valor);
