@@ -14,7 +14,7 @@
     el.hidden = false;
   }
 
-  const RAILWAY_API_BASE = 'https://backend-production-878b.up.railway.app';
+  const RAILWAY_API_BASE = 'https://backend-production-0b1f.up.railway.app';
   const isLocal = window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1';
   const isNetlify = window.location.hostname.endsWith('netlify.app');
   const apiBaseFromQuery = new URLSearchParams(window.location.search).get('apiBase');
