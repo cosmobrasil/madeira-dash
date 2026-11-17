@@ -4,7 +4,7 @@ Dashboard dark-mode para consolidar os formulários do Pré-Diagnóstico de Circ
 
 ## Funcionalidades
 - Filtros por setor, produto, cidade, UF e período.
-- Menu Setor restrito a Moda, Móveis, Calçado e Náutica, com Moda selecionada inicialmente. As quatro opções permanecem disponíveis mesmo sem respostas no setor selecionado; os demais setores não são oferecidos.
+- Menu Setor com Todos, Moda, Móveis, Calçado e Náutica, com Todos selecionado inicialmente para consultar sem filtro de setor. As quatro opções específicas permanecem disponíveis mesmo sem respostas no setor selecionado; os demais setores não são oferecidos individualmente.
 - Móveis consulta o valor cadastrado `Madeira e Móveis`; Calçado consulta `Calçados`, preservando a compatibilidade com a API existente.
 - Ao trocar de setor, produto, cidade e UF são limpos e o painel é atualizado automaticamente; o período escolhido é preservado.
 - KPIs: total de formulários, média de pontos, média IGC, média PCM.
