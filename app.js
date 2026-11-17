@@ -240,7 +240,7 @@
     const result = await getJSON('/api/dashboard/filters', filtros);
     if (!result || !result.success) return;
     const data = result.data || {};
-    preencherSelect(el.setor, data.setores || [], 'Todos');
+    // Os setores são fixos, inclusive quando a consulta não retorna respostas.
     preencherSelect(el.produto, data.produtos || [], 'Todos');
     preencherSelectMultiplo(el.cidade, data.cidades || []);
     preencherSelect(el.uf, data.ufs || [], data.hasUf ? 'Todas' : 'UF indisponivel');
@@ -557,6 +557,11 @@
 
     [el.setor, el.produto, el.cidade, el.uf, el.dataInicio, el.dataFim].forEach((input) => {
       input.addEventListener('change', async () => {
+        if (input === el.setor) {
+          el.produto.value = '';
+          Array.from(el.cidade.options).forEach((option) => { option.selected = false; });
+          el.uf.value = '';
+        }
         await atualizarDashboard();
         await Promise.allSettled([carregarFiltros()]);
       });
