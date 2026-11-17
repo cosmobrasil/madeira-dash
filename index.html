@@ -35,10 +35,17 @@
         <label>Produto
           <select id="filtroProduto"><option value="">Todos</option></select>
         </label>
-        <label>Cidade
-          <select id="filtroCidade" multiple size="5" aria-describedby="ajudaFiltroCidade"></select>
-          <span id="ajudaFiltroCidade" class="filter-help">Nenhuma cidade selecionada inclui todas. Use Ctrl/Cmd para escolher mais de uma.</span>
-        </label>
+        <div class="city-filter">
+          <span id="tituloFiltroCidade">Cidade</span>
+          <select id="filtroCidade" multiple hidden aria-hidden="true" tabindex="-1"></select>
+          <details id="menuCidades" class="city-menu">
+            <summary aria-labelledby="tituloFiltroCidade resumoCidades"><span id="resumoCidades">Todas</span></summary>
+            <div class="city-popover">
+              <div id="listaCidades" class="city-options" role="group" aria-labelledby="tituloFiltroCidade"></div>
+              <p class="filter-help">Marque uma ou mais cidades ou escolha Todas.</p>
+            </div>
+          </details>
+        </div>
         <label>UF
           <select id="filtroUf"><option value="">Todas</option></select>
         </label>

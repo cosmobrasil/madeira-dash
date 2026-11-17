@@ -32,6 +32,9 @@
     setor: document.getElementById('filtroSetor'),
     produto: document.getElementById('filtroProduto'),
     cidade: document.getElementById('filtroCidade'),
+    menuCidades: document.getElementById('menuCidades'),
+    resumoCidades: document.getElementById('resumoCidades'),
+    listaCidades: document.getElementById('listaCidades'),
     uf: document.getElementById('filtroUf'),
     dataInicio: document.getElementById('filtroDataInicio'),
     dataFim: document.getElementById('filtroDataFim'),
@@ -78,6 +81,38 @@
 
   function cidadesSelecionadas() {
     return Array.from(el.cidade.selectedOptions).map((option) => option.value);
+  }
+
+  function sincronizarMenuCidades() {
+    const selecionadas = new Set(cidadesSelecionadas());
+    el.resumoCidades.textContent = selecionadas.size === 0
+      ? 'Todas'
+      : selecionadas.size === 1
+        ? formatarCidade([...selecionadas][0])
+        : `${selecionadas.size} cidades selecionadas`;
+    el.listaCidades.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+      input.checked = input.value === '' ? selecionadas.size === 0 : selecionadas.has(input.value);
+    });
+  }
+
+  function renderizarMenuCidades() {
+    const foco = el.listaCidades.contains(document.activeElement) ? document.activeElement.value : null;
+    const rolagem = el.listaCidades.scrollTop;
+    el.listaCidades.replaceChildren();
+    const opcoes = [{ value: '', textContent: 'Todas' }, ...Array.from(el.cidade.options)];
+    opcoes.forEach((option) => {
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.value = option.value;
+      label.append(input, document.createTextNode(option.textContent));
+      el.listaCidades.appendChild(label);
+    });
+    sincronizarMenuCidades();
+    if (foco !== null) {
+      Array.from(el.listaCidades.querySelectorAll('input')).find((input) => input.value === foco)?.focus({ preventScroll: true });
+    }
+    el.listaCidades.scrollTop = rolagem;
   }
 
   function filtrosAtuais() {
@@ -231,6 +266,7 @@
       option.selected = selecionados.has(valor);
       select.appendChild(option);
     });
+    renderizarMenuCidades();
   }
 
   async function carregarFiltros() {
@@ -545,12 +581,34 @@
   }
 
   function configurarEventos() {
+    el.listaCidades.addEventListener('change', (event) => {
+      const input = event.target;
+      if (input.type !== 'checkbox') return;
+      Array.from(el.cidade.options).forEach((option) => {
+        if (input.value === '') option.selected = false;
+        else if (option.value === input.value) option.selected = input.checked;
+      });
+      sincronizarMenuCidades();
+      el.cidade.dispatchEvent(new Event('change'));
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!el.menuCidades.contains(event.target)) el.menuCidades.open = false;
+    });
+    el.menuCidades.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        el.menuCidades.open = false;
+        el.menuCidades.querySelector('summary').focus();
+      }
+    });
+
   el.btnAtualizar.addEventListener('click', async () => {
       await atualizarTudo();
   });
 
   el.btnTodasCidades.addEventListener('click', async () => {
     Array.from(el.cidade.options).forEach((option) => { option.selected = false; });
+    sincronizarMenuCidades();
     await atualizarDashboard();
     await Promise.allSettled([carregarFiltros()]);
   });
@@ -562,6 +620,7 @@
           Array.from(el.cidade.options).forEach((option) => { option.selected = false; });
           el.uf.value = '';
         }
+        sincronizarMenuCidades();
         await atualizarDashboard();
         await Promise.allSettled([carregarFiltros()]);
       });
@@ -587,6 +646,7 @@
 
   async function init() {
     restoreToken();
+    renderizarMenuCidades();
     configurarEventos();
     await atualizarTudo();
   }

@@ -121,9 +121,82 @@ input[type="password"] {
   outline: none;
 }
 
-select[multiple] {
-  min-height: 8.9rem;
-  padding: .35rem;
+.city-filter {
+  display: grid;
+  align-content: start;
+  gap: .35rem;
+  min-width: 0;
+  color: var(--muted);
+  font-size: .88rem;
+}
+
+.city-menu {
+  position: relative;
+  min-width: 0;
+}
+
+.city-menu summary {
+  padding: .65rem .75rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #0b1424;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.city-menu summary span {
+  overflow-wrap: anywhere;
+}
+
+.city-menu summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.city-popover {
+  position: absolute;
+  top: calc(100% + .4rem);
+  left: 0;
+  width: 100%;
+  max-width: calc(100vw - 4rem);
+  z-index: 30;
+  padding: .4rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #0b1424;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .4);
+}
+
+.city-options {
+  max-height: min(240px, 45vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.city-options label {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .55rem;
+  border-radius: 6px;
+  color: var(--text);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.city-options label:hover,
+.city-options label:focus-within {
+  background: var(--panel-2);
+}
+
+.city-options input {
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+.city-popover .filter-help {
+  margin: .5rem;
 }
 
 .filter-help {
